@@ -25,7 +25,6 @@
 
 <nav id="mainNav"></nav>
 
-<!-- Admin Gate -->
 <div id="gate" class="admin-gate">
     <h2 style="color: var(--primary); margin-bottom: 1rem;">Admin Access</h2>
     <p style="color:#666; margin-bottom: 1.5rem;">Enter admin password to continue.</p>
@@ -36,7 +35,6 @@
     <div id="gateMessage" class="message"></div>
 </div>
 
-<!-- Admin Dashboard -->
 <section id="adminPanel" style="display:none;">
     <div class="section-container">
         <div class="section-title">
@@ -111,15 +109,11 @@
         serverTimestamp, setMessage, ADMIN_PASSWORD
     } from "./firebase.js";
 
-    const gate = document.getElementById("gate");
-    const adminPanel = document.getElementById("adminPanel");
-    const adminMessage = "#adminMessage";
-
     document.getElementById("gateBtn").addEventListener("click", () => {
         const pass = document.getElementById("adminPass").value;
         if (pass === ADMIN_PASSWORD) {
-            gate.style.display = "none";
-            adminPanel.style.display = "block";
+            document.getElementById("gate").style.display = "none";
+            document.getElementById("adminPanel").style.display = "block";
             loadRegistrations();
         } else {
             setMessage("#gateMessage", "❌ Incorrect password.", "error");
@@ -130,7 +124,7 @@
 
     async function loadRegistrations() {
         const tbody = document.getElementById("appTableBody");
-        tbody.innerHTML = `<tr><td colspan="8" class="empty-row">Loading registrations...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-row">Loading...</td></tr>`;
 
         try {
             const snap = await getDocs(collection(db, "students"));
@@ -144,7 +138,6 @@
                 rows.push({ id: d.id, ...a });
             });
 
-            // Sort: pending first
             rows.sort((x, y) => {
                 if (x.status === "pending" && y.status !== "pending") return -1;
                 if (x.status !== "pending" && y.status === "pending") return 1;
@@ -203,17 +196,16 @@
     }
 
     async function approveStudent(uid, data) {
-        if (!confirm(`Approve ${data.fullName}? They will be able to login and see their exam slip.`)) return;
+        if (!confirm(`Approve ${data.fullName}?`)) return;
         try {
             await updateDoc(doc(db, "students", uid), {
                 status: "approved",
                 approvedAt: serverTimestamp()
             });
-            setMessage(adminMessage, `✅ Approved ${data.fullName}. Seat No: ${data.seatNumber}`, "ok");
+            setMessage("#adminMessage", `✅ Approved ${data.fullName}. Seat No: ${data.seatNumber}`, "ok");
             loadRegistrations();
         } catch (err) {
-            console.error(err);
-            setMessage(adminMessage, "❌ Approval error: " + err.message, "error");
+            setMessage("#adminMessage", "❌ Approval error: " + err.message, "error");
         }
     }
 
@@ -224,11 +216,10 @@
                 status: "rejected",
                 rejectedAt: serverTimestamp()
             });
-            setMessage(adminMessage, `✅ Rejected ${data.fullName}.`, "ok");
+            setMessage("#adminMessage", `✅ Rejected ${data.fullName}.`, "ok");
             loadRegistrations();
         } catch (err) {
-            console.error(err);
-            setMessage(adminMessage, "❌ Reject error: " + err.message, "error");
+            setMessage("#adminMessage", "❌ Reject error: " + err.message, "error");
         }
     }
 
