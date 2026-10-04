@@ -38,45 +38,45 @@
             <form id="registrationForm" novalidate>
                 <div class="form-group">
                     <label for="fullName">Full Name *</label>
-                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                    <input type="text" id="fullName" required placeholder="Enter your full name">
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="fatherName">Father Name *</label>
-                        <input type="text" id="fatherName" name="fatherName" required placeholder="Father's name">
+                        <input type="text" id="fatherName" required placeholder="Father's name">
                     </div>
                     <div class="form-group">
                         <label for="schoolName">School Name *</label>
-                        <input type="text" id="schoolName" name="schoolName" required placeholder="Your school name">
+                        <input type="text" id="schoolName" required placeholder="Your school name">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="email">Email Address *</label>
-                        <input type="email" id="email" name="email" required placeholder="you@example.com">
+                        <input type="email" id="email" required placeholder="you@example.com">
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone Number *</label>
-                        <input type="tel" id="phone" name="phone" required placeholder="03XXXXXXXXX">
+                        <input type="tel" id="phone" required placeholder="03XXXXXXXXX">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="class">Class *</label>
-                        <input type="text" id="class" name="class" required placeholder="e.g. 9th, 10th, 11th">
+                        <label for="classLevel">Class *</label>
+                        <input type="text" id="classLevel" required placeholder="e.g. 9th, 10th, 11th">
                     </div>
                     <div class="form-group">
                         <label for="city">City *</label>
-                        <input type="text" id="city" name="city" required placeholder="Your city">
+                        <input type="text" id="city" required placeholder="Your city">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="testProgram">Select Test Program *</label>
-                    <select id="testProgram" name="testProgram" required>
+                    <select id="testProgram" required>
                         <option value="">-- Select --</option>
                         <option value="Academic Test">Academic Test</option>
                         <option value="Competitive Test">Competitive Test</option>
@@ -87,11 +87,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="password">Password *</label>
-                        <input type="password" id="password" name="password" required placeholder="Create a password (min 6 characters)" minlength="6">
+                        <input type="password" id="password" required placeholder="Min 6 characters" minlength="6">
                     </div>
                     <div class="form-group">
                         <label for="confirmPassword">Confirm Password *</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter password" minlength="6">
+                        <input type="password" id="confirmPassword" required placeholder="Re-enter password" minlength="6">
                     </div>
                 </div>
 
@@ -110,7 +110,6 @@
     </div>
 </section>
 
-<!-- Footer -->
 <footer>
     <div class="footer-container">
         <div class="footer-section">
@@ -158,28 +157,24 @@
         const schoolName = document.getElementById("schoolName").value.trim();
         const email = document.getElementById("email").value.trim().toLowerCase();
         const phone = document.getElementById("phone").value.trim();
-        const classLevel = document.getElementById("class").value.trim();
+        const classLevel = document.getElementById("classLevel").value.trim();
         const city = document.getElementById("city").value.trim();
         const testProgram = document.getElementById("testProgram").value;
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
 
-        // Validation
         if (!fullName || !fatherName || !schoolName || !email || !phone || !classLevel || !city || !testProgram) {
             setMessage("#formMessage", "❌ Please fill all required fields.", "error");
             return;
         }
-
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             setMessage("#formMessage", "❌ Please enter a valid email address.", "error");
             return;
         }
-
         if (password.length < 6) {
             setMessage("#formMessage", "❌ Password must be at least 6 characters.", "error");
             return;
         }
-
         if (password !== confirmPassword) {
             setMessage("#formMessage", "❌ Passwords do not match.", "error");
             return;
@@ -190,14 +185,10 @@
         btn.textContent = "Registering...";
 
         try {
-            // 1. Create Firebase Auth user with email + password
             const cred = await createUserWithEmailAndPassword(auth, email, password);
             const uid = cred.user.uid;
-
-            // 2. Generate seat number
             const seatNumber = generateSeatNumber();
 
-            // 3. Save student data in Firestore
             const studentData = {
                 uid,
                 fullName,
@@ -209,13 +200,11 @@
                 city,
                 testProgram,
                 seatNumber,
-                status: "pending", // admin will approve
+                status: "pending",
                 createdAt: serverTimestamp()
             };
 
             await setDoc(doc(db, "students", uid), studentData);
-
-            // 4. Also add to "registrations" collection for admin view
             await addDoc(collection(db, "registrations"), {
                 ...studentData,
                 registrationId: "MTS-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000)
