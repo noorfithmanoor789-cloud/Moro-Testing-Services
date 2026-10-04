@@ -6,6 +6,7 @@
     <title>Admin Dashboard — Moro Testing Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
         .form-container, .fade-in, .zoom-in { opacity: 1 !important; transform: none !important; }
     </style>
@@ -25,6 +26,7 @@
 
 <nav id="mainNav"></nav>
 
+<!-- Admin Gate -->
 <div id="gate" class="admin-gate">
     <h2 style="color: var(--primary); margin-bottom: 1rem;">Admin Access</h2>
     <p style="color:#666; margin-bottom: 1.5rem;">Enter admin password to continue.</p>
@@ -35,18 +37,19 @@
     <div id="gateMessage" class="message"></div>
 </div>
 
+<!-- Admin Dashboard -->
 <section id="adminPanel" style="display:none;">
     <div class="section-container">
         <div class="section-title">
-            <h2>Student Registrations</h2>
-            <p style="color:#555; margin-top:1rem;">Review and approve student registrations. Approved students can login and see their exam slip.</p>
+            <h2>Pending Applications</h2>
+            <p style="color:#555; margin-top:1rem;">Review and approve student applications. Approved students automatically receive login credentials via email.</p>
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
             <div>
-                <strong>Pending:</strong> <span id="pendingCount" class="badge-pending">0</span>
+                <strong>Total Pending:</strong> <span id="pendingCount" class="badge-pending">0</span>
                 &nbsp;&nbsp;
-                <strong>Approved:</strong> <span id="approvedCount" class="badge-approved">0</span>
+                <strong>Total Approved:</strong> <span id="approvedCount" class="badge-approved">0</span>
             </div>
             <button id="refreshBtn" class="show-more" style="border:none; cursor:pointer;">
                 <i class="fas fa-sync"></i> Refresh
@@ -57,17 +60,15 @@
             <thead>
                 <tr>
                     <th>Student Name</th>
-                    <th>Father Name</th>
-                    <th>School</th>
-                    <th>Class</th>
-                    <th>Seat No.</th>
                     <th>Email</th>
+                    <th>Program</th>
+                    <th>Date</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="appTableBody">
-                <tr><td colspan="8" class="empty-row">Loading registrations...</td></tr>
+                <tr><td colspan="6" class="empty-row">Loading applications...</td></tr>
             </tbody>
         </table>
 
@@ -75,61 +76,123 @@
     </div>
 </section>
 
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
 <footer>
     <div class="footer-container">
+
+        <!-- Contact Information -->
         <div class="footer-section">
             <h3>Contact Information</h3>
             <div class="contact-info">
-                <p><i class="fas fa-map-marker-alt"></i> <span>Moro Testing Services, Moro, Sindh</span></p>
-                <p><i class="fas fa-envelope"></i> <a href="mailto:morotesting48@gmail.com">morotesting48@gmail.com</a></p>
-                <p><i class="fas fa-phone"></i> <a href="tel:+923234296569">0323-4296569</a></p>
+                <p>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Moro Testing Services, Moro, Sindh</span>
+                </p>
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:morotesting48@gmail.com">morotesting48@gmail.com</a>
+                </p>
+                <p>
+                    <i class="fas fa-phone"></i>
+                    <a href="tel:+923234296569">0323-4296569</a>
+                </p>
             </div>
         </div>
+
+        <!-- Quick Links -->
         <div class="footer-section">
             <h3>Quick Links</h3>
             <ul class="footer-links">
                 <li><a href="./index.html">Home</a></li>
-                <li><a href="./admin.html">Admin</a></li>
+                <li><a href="./index.html#about">About</a></li>
+                <li><a href="./index.html#principal">Founder</a></li>
+                <li><a href="./index.html#programs">Programs</a></li>
+                <li><a href="./workshop.html">Workshop</a></li>
+                <li><a href="./register.html">Apply Now</a></li>
+                <li><a href="./login.html">Student Login</a></li>
             </ul>
         </div>
+
+        <!-- Follow Us -->
+        <div class="footer-section">
+            <h3>Follow Us</h3>
+            <div class="social-links">
+                <a href="#" target="_blank" rel="noopener" class="facebook" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" target="_blank" rel="noopener" class="tiktok" aria-label="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="#" target="_blank" rel="noopener" class="linkedin" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+
     </div>
+
+    <!-- Copyright -->
     <div class="copyright">
         <p>&copy; 2026 Moro Testing Services. All rights reserved.</p>
     </div>
+
+    <!-- Designer Credit -->
     <div class="designer-credit">
         <p>Designed by <strong>Misbah Kazi</strong></p>
     </div>
 </footer>
+<!-- ============================================================ -->
 
 <script src="./nav.js"></script>
 
 <script type="module">
     import {
-        db, doc, updateDoc, collection, getDocs,
-        serverTimestamp, setMessage, ADMIN_PASSWORD
+        db, auth, createUserWithEmailAndPassword, usernameToEmail,
+        doc, setDoc, updateDoc, collection, getDocs,
+        serverTimestamp, setMessage, generatePassword, generateUsername,
+        sendApprovalEmail, ADMIN_PASSWORD, EMAILJS_PUBLIC_KEY, formatDate
     } from "./firebase.js";
+
+    // Init EmailJS
+    if (typeof emailjs !== "undefined" && !EMAILJS_PUBLIC_KEY.startsWith("YOUR_")) {
+        try {
+            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+            console.log("✅ EmailJS initialized with public key");
+        } catch (e) {
+            console.error("❌ EmailJS init failed:", e);
+        }
+    } else {
+        console.error("❌ EmailJS SDK not loaded or key missing");
+    }
+
+    const gate = document.getElementById("gate");
+    const adminPanel = document.getElementById("adminPanel");
+    const adminMessage = "#adminMessage";
 
     document.getElementById("gateBtn").addEventListener("click", () => {
         const pass = document.getElementById("adminPass").value;
         if (pass === ADMIN_PASSWORD) {
-            document.getElementById("gate").style.display = "none";
-            document.getElementById("adminPanel").style.display = "block";
-            loadRegistrations();
+            gate.style.display = "none";
+            adminPanel.style.display = "block";
+            loadApplications();
         } else {
             setMessage("#gateMessage", "❌ Incorrect password.", "error");
         }
     });
 
-    document.getElementById("refreshBtn").addEventListener("click", loadRegistrations);
+    document.getElementById("refreshBtn").addEventListener("click", loadApplications);
 
-    async function loadRegistrations() {
+    async function loadApplications() {
         const tbody = document.getElementById("appTableBody");
-        tbody.innerHTML = `<tr><td colspan="8" class="empty-row">Loading...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Loading applications...</td></tr>`;
 
         try {
-            const snap = await getDocs(collection(db, "students"));
+            const snap = await getDocs(collection(db, "applications"));
             const rows = [];
-            let pending = 0, approved = 0;
+            let pending = 0;
+            let approved = 0;
 
             snap.forEach(d => {
                 const a = d.data();
@@ -150,30 +213,25 @@
             document.getElementById("approvedCount").textContent = approved;
 
             if (rows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="empty-row">No registrations yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-row">No applications yet.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = rows.map(r => {
-                const badge = r.status === "pending" ? "badge-pending"
-                    : r.status === "approved" ? "badge-approved" : "badge-rejected";
-
+                const badgeClass = r.status === "pending" ? "badge-pending" : r.status === "approved" ? "badge-approved" : "badge-rejected";
                 const actions = r.status === "pending"
                     ? `<button class="btn-approve" data-action="approve" data-id="${r.id}">Approve</button>
                        <button class="btn-reject" data-action="reject" data-id="${r.id}">Reject</button>`
                     : r.status === "approved"
-                        ? `<span style="color:#4cd137;font-weight:600;">✓ Approved</span>`
-                        : `<span style="color:#e74c3c;font-weight:600;">Rejected</span>`;
-
+                        ? `<span style="color:#4cd137; font-weight:600;">Credentials sent</span>`
+                        : `<span style="color:#e74c3c; font-weight:600;">Rejected</span>`;
                 return `
                     <tr>
                         <td>${escapeHtml(r.fullName || "-")}</td>
-                        <td>${escapeHtml(r.fatherName || "-")}</td>
-                        <td>${escapeHtml(r.schoolName || "-")}</td>
-                        <td>${escapeHtml(r.class || "-")}</td>
-                        <td>${escapeHtml(r.seatNumber || "-")}</td>
                         <td>${escapeHtml(r.email || "-")}</td>
-                        <td><span class="${badge}">${r.status || "pending"}</span></td>
+                        <td>${escapeHtml(r.program || "-")}</td>
+                        <td>${formatDate(r.createdAt)}</td>
+                        <td><span class="${badgeClass}">${r.status || "pending"}</span></td>
                         <td>${actions}</td>
                     </tr>
                 `;
@@ -183,43 +241,92 @@
                 btn.addEventListener("click", () => {
                     const id = btn.dataset.id;
                     const action = btn.dataset.action;
-                    const row = rows.find(x => x.id === id);
-                    if (!row) return;
-                    if (action === "approve") approveStudent(id, row);
-                    else rejectStudent(id, row);
+                    const app = rows.find(x => x.id === id);
+                    if (!app) return;
+                    if (action === "approve") approveApplication(id, app);
+                    else rejectApplication(id, app);
                 });
             });
         } catch (err) {
             console.error(err);
-            tbody.innerHTML = `<tr><td colspan="8" class="empty-row">Error: ${escapeHtml(err.message)}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Error: ${escapeHtml(err.message)}</td></tr>`;
         }
     }
 
-    async function approveStudent(uid, data) {
-        if (!confirm(`Approve ${data.fullName}?`)) return;
+    async function approveApplication(appId, appData) {
+        if (!confirm(`Approve ${appData.fullName}? Credentials will be generated and emailed.`)) return;
+
         try {
-            await updateDoc(doc(db, "students", uid), {
+            const username = generateUsername("MTS");
+            const password = generatePassword();
+            const email = usernameToEmail(username);
+
+            const cred = await createUserWithEmailAndPassword(auth, email, password);
+            const uid = cred.user.uid;
+
+            await setDoc(doc(db, "students", uid), {
+                uid,
+                username,
+                email,
+                passwordPlain: password,
+                fullName: appData.fullName || "",
+                fatherName: appData.fatherName || "",
+                contactEmail: appData.email || "",
+                phone: appData.phone || "",
+                qualification: appData.qualification || "",
+                city: appData.city || "",
+                program: appData.program || "",
+                applicationId: appData.applicationId || "",
                 status: "approved",
+                approvedAt: serverTimestamp(),
+                createdAt: appData.createdAt || serverTimestamp()
+            });
+
+            await updateDoc(doc(db, "applications", appId), {
+                status: "approved",
+                username,
                 approvedAt: serverTimestamp()
             });
-            setMessage("#adminMessage", `✅ Approved ${data.fullName}. Seat No: ${data.seatNumber}`, "ok");
-            loadRegistrations();
+
+            let emailStatus = "not attempted";
+            console.log("📧 Starting email send for:", appData.email);
+
+            try {
+                const result = await sendApprovalEmail(appData.email, appData.fullName, username, password);
+                if (result.ok) {
+                    emailStatus = "✅ sent";
+                    console.log("✅ Email confirmed sent:", result.response);
+                } else {
+                    emailStatus = "❌ " + result.error;
+                    console.error("❌ Email failed:", result.error);
+                }
+            } catch (emailErr) {
+                console.error("❌ Email exception:", emailErr);
+                emailStatus = "❌ exception: " + (emailErr.message || "unknown");
+            }
+
+            setMessage(adminMessage,
+                `✅ Approved ${appData.fullName}. Username: ${username} | Password: ${password} | Email: ${emailStatus}`,
+                "ok");
+            loadApplications();
         } catch (err) {
-            setMessage("#adminMessage", "❌ Approval error: " + err.message, "error");
+            console.error(err);
+            setMessage(adminMessage, "❌ Approval error: " + (err.message || err), "error");
         }
     }
 
-    async function rejectStudent(uid, data) {
-        if (!confirm(`Reject ${data.fullName}'s registration?`)) return;
+    async function rejectApplication(appId, appData) {
+        if (!confirm(`Reject ${appData.fullName}'s application?`)) return;
         try {
-            await updateDoc(doc(db, "students", uid), {
+            await updateDoc(doc(db, "applications", appId), {
                 status: "rejected",
                 rejectedAt: serverTimestamp()
             });
-            setMessage("#adminMessage", `✅ Rejected ${data.fullName}.`, "ok");
-            loadRegistrations();
+            setMessage(adminMessage, `✅ Rejected ${appData.fullName}.`, "ok");
+            loadApplications();
         } catch (err) {
-            setMessage("#adminMessage", "❌ Reject error: " + err.message, "error");
+            console.error(err);
+            setMessage(adminMessage, "❌ Reject error: " + err.message, "error");
         }
     }
 
