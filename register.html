@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Moro Testing Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles.css">
+    <style>
+        .form-container, .fade-in, .zoom-in { opacity: 1 !important; transform: none !important; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <div class="logo-container">
+            <img src="./logo.jpg" alt="Moro Testing Services" class="logo-img" onerror="this.style.display='none'">
+            <div class="logo-text">
+                <h1>MORO TESTING SERVICES</h1>
+                <p>Student Registration Form</p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav id="mainNav"></nav>
+
+<section>
+    <div class="section-container">
+        <div class="section-title">
+            <h2>Student Registration Form</h2>
+            <p style="color: #555; font-size: 1.1rem; margin-top: 1rem;">
+                Fill in your details to register. After admin approval, you can login with your email and password to view your exam slip.
+            </p>
+        </div>
+
+        <div class="form-container">
+            <form id="registrationForm" novalidate>
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fatherName">Father Name *</label>
+                        <input type="text" id="fatherName" name="fatherName" required placeholder="Father's name">
+                    </div>
+                    <div class="form-group">
+                        <label for="schoolName">School Name *</label>
+                        <input type="text" id="schoolName" name="schoolName" required placeholder="Your school name">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required placeholder="you@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="03XXXXXXXXX">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="class">Class *</label>
+                        <input type="text" id="class" name="class" required placeholder="e.g. 9th, 10th, 11th">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city" required placeholder="Your city">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="testProgram">Select Test Program *</label>
+                    <select id="testProgram" name="testProgram" required>
+                        <option value="">-- Select --</option>
+                        <option value="Academic Test">Academic Test</option>
+                        <option value="Competitive Test">Competitive Test</option>
+                        <option value="Online Test">Online Test</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password" required placeholder="Create a password (min 6 characters)" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter password" minlength="6">
+                    </div>
+                </div>
+
+                <button type="submit" class="cta-button" id="submitBtn" style="width:100%; border:none; cursor:pointer;">
+                    Register Now
+                </button>
+
+                <div id="formMessage" class="message"></div>
+
+                <p style="text-align: center; margin-top: 1.5rem; color: #666;">
+                    Already registered?
+                    <a href="./login.html" style="color: #1a5276; font-weight: 600;">Student Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>Contact Information</h3>
+            <div class="contact-info">
+                <p><i class="fas fa-map-marker-alt"></i> <span>Moro Testing Services, Moro, Sindh</span></p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:morotesting48@gmail.com">morotesting48@gmail.com</a></p>
+                <p><i class="fas fa-phone"></i> <a href="tel:+923234296569">0323-4296569</a></p>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <ul class="footer-links">
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./register.html">Register</a></li>
+                <li><a href="./login.html">Student Login</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2026 Moro Testing Services. All rights reserved.</p>
+    </div>
+    <div class="designer-credit">
+        <p>Designed by <strong>Misbah Kazi</strong></p>
+    </div>
+</footer>
+
+<script src="./nav.js"></script>
+
+<script type="module">
+    import {
+        auth, db, createUserWithEmailAndPassword,
+        doc, setDoc, addDoc, collection, serverTimestamp,
+        setMessage, generateSeatNumber
+    } from "./firebase.js";
+
+    const form = document.getElementById("registrationForm");
+    const btn = document.getElementById("submitBtn");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const fatherName = document.getElementById("fatherName").value.trim();
+        const schoolName = document.getElementById("schoolName").value.trim();
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const phone = document.getElementById("phone").value.trim();
+        const classLevel = document.getElementById("class").value.trim();
+        const city = document.getElementById("city").value.trim();
+        const testProgram = document.getElementById("testProgram").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        // Validation
+        if (!fullName || !fatherName || !schoolName || !email || !phone || !classLevel || !city || !testProgram) {
+            setMessage("#formMessage", "❌ Please fill all required fields.", "error");
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            setMessage("#formMessage", "❌ Please enter a valid email address.", "error");
+            return;
+        }
+
+        if (password.length < 6) {
+            setMessage("#formMessage", "❌ Password must be at least 6 characters.", "error");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setMessage("#formMessage", "❌ Passwords do not match.", "error");
+            return;
+        }
+
+        btn.disabled = true;
+        const originalText = btn.textContent;
+        btn.textContent = "Registering...";
+
+        try {
+            // 1. Create Firebase Auth user with email + password
+            const cred = await createUserWithEmailAndPassword(auth, email, password);
+            const uid = cred.user.uid;
+
+            // 2. Generate seat number
+            const seatNumber = generateSeatNumber();
+
+            // 3. Save student data in Firestore
+            const studentData = {
+                uid,
+                fullName,
+                fatherName,
+                schoolName,
+                email,
+                phone,
+                class: classLevel,
+                city,
+                testProgram,
+                seatNumber,
+                status: "pending", // admin will approve
+                createdAt: serverTimestamp()
+            };
+
+            await setDoc(doc(db, "students", uid), studentData);
+
+            // 4. Also add to "registrations" collection for admin view
+            await addDoc(collection(db, "registrations"), {
+                ...studentData,
+                registrationId: "MTS-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000)
+            });
+
+            setMessage("#formMessage",
+                "✅ Registration successful! Await admin approval. You can login with your email and password.",
+                "ok");
+
+            form.reset();
+
+            setTimeout(() => {
+                window.location.href = "./login.html";
+            }, 2500);
+
+        } catch (err) {
+            console.error("Registration error:", err);
+            let msg = err.message || "Registration failed.";
+            if (err.code === "auth/email-already-in-use") {
+                msg = "This email is already registered. Please login instead.";
+            } else if (err.code === "auth/invalid-email") {
+                msg = "Invalid email address.";
+            } else if (err.code === "auth/weak-password") {
+                msg = "Password is too weak. Use at least 6 characters.";
+            }
+            setMessage("#formMessage", "❌ " + msg, "error");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+    });
+</script>
+</body>
+</html>
