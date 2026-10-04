@@ -1,7 +1,6 @@
 // nav.js — MORO TESTING SERVICES
 (function () {
   const path = (location.pathname.split("/").pop() || "index.html").toLowerCase();
-
   const isIndex = path === "" || path === "index.html";
   const isDash = path === "dashboard.html";
 
@@ -16,7 +15,6 @@
           <li><a href="./index.html#contact">Contact</a></li>
           <li><a href="./dashboard.html" class="${isDash ? 'active' : ''}">Portal</a></li>
         </ul>
-
         <div class="nav-actions">
           <a href="./register.html" class="btn-apply">Register</a>
           <a href="./login.html" class="btn-login">Login</a>
