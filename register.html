@@ -7,7 +7,79 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles.css">
     <style>
+        /* Emergency fallback — guarantees page is visible even if styles.css fails */
         .form-container, .fade-in, .zoom-in { opacity: 1 !important; transform: none !important; }
+
+        /* Payment box styles */
+        .payment-box {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe9d1 100%);
+            border-left: 5px solid #e74c3c;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .payment-box h3 {
+            color: #c0392b;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .payment-box .jazz-number {
+            background: white;
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1a5276;
+            display: inline-block;
+            margin: 0.6rem 0;
+            letter-spacing: 1px;
+            border: 2px dashed #e74c3c;
+        }
+        .payment-box ol {
+            margin: 0.6rem 0 0.8rem 1.2rem;
+            color: #333;
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+        .payment-box ol li {
+            margin-bottom: 0.3rem;
+        }
+        .payment-box .amount-highlight {
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        .payment-box .note {
+            font-size: 0.9rem;
+            color: #555;
+            font-style: italic;
+            margin-top: 0.6rem;
+            display: block;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0 1.5rem;
+            color: #999;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+        .divider span {
+            padding: 0 1rem;
+        }
     </style>
 </head>
 <body>
@@ -17,7 +89,7 @@
             <img src="./logo.jpg" alt="Moro Testing Services" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">
                 <h1>MORO TESTING SERVICES</h1>
-                <p>Student Registration Form</p>
+                <p>Excellence in Testing & Student Assessment</p>
             </div>
         </div>
     </div>
@@ -28,75 +100,125 @@
 <section>
     <div class="section-container">
         <div class="section-title">
-            <h2>Student Registration Form</h2>
+            <h2>Student Application Form</h2>
             <p style="color: #555; font-size: 1.1rem; margin-top: 1rem;">
-                Fill in your details to register. After admin approval, you can login with your email and password to view your exam slip.
+                Fill in your details to apply. After admin approval, you will receive your login credentials via email.
             </p>
         </div>
 
         <div class="form-container">
-            <form id="registrationForm" novalidate>
+            <form id="applicationForm" novalidate>
+                <!-- Personal Details -->
                 <div class="form-group">
                     <label for="fullName">Full Name *</label>
-                    <input type="text" id="fullName" required placeholder="Enter your full name">
+                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="fatherName">Father Name *</label>
-                        <input type="text" id="fatherName" required placeholder="Father's name">
+                        <input type="text" id="fatherName" name="fatherName" required placeholder="Father's name">
                     </div>
-                    <div class="form-group">
-                        <label for="schoolName">School Name *</label>
-                        <input type="text" id="schoolName" required placeholder="Your school name">
-                    </div>
-                </div>
-
-                <div class="form-row">
                     <div class="form-group">
                         <label for="email">Email Address *</label>
-                        <input type="email" id="email" required placeholder="you@example.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number *</label>
-                        <input type="tel" id="phone" required placeholder="03XXXXXXXXX">
+                        <input type="email" id="email" name="email" required placeholder="you@example.com">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="classLevel">Class *</label>
-                        <input type="text" id="classLevel" required placeholder="e.g. 9th, 10th, 11th">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="03XXXXXXXXX">
                     </div>
                     <div class="form-group">
                         <label for="city">City *</label>
-                        <input type="text" id="city" required placeholder="Your city">
+                        <input type="text" id="city" name="city" required placeholder="Your city">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="testProgram">Select Test Program *</label>
-                    <select id="testProgram" required>
-                        <option value="">-- Select --</option>
-                        <option value="Academic Test">Academic Test</option>
-                        <option value="Competitive Test">Competitive Test</option>
-                        <option value="Online Test">Online Test</option>
-                    </select>
+                    <label for="qualification">Qualification *</label>
+                    <input type="text" id="qualification" name="qualification" required placeholder="e.g. Intermediate, Bachelor's">
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="password">Password *</label>
-                        <input type="password" id="password" required placeholder="Min 6 characters" minlength="6">
+                        <label for="program">Test / Program *</label>
+                        <select id="program" name="program" required>
+                            <option value="">-- Select --</option>
+                            <option value="Academic Test Preparation">Academic Test Preparation</option>
+                            <option value="Competitive Test Preparation">Competitive Test Preparation</option>
+                            <option value="Online Testing Program">Online Testing Program</option>
+                            <option value="Workshop & Training">Workshop & Training</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="confirmPassword">Confirm Password *</label>
-                        <input type="password" id="confirmPassword" required placeholder="Re-enter password" minlength="6">
+                        <label for="preferredDate">Preferred Test Date</label>
+                        <input type="date" id="preferredDate" name="preferredDate">
                     </div>
                 </div>
 
-                <button type="submit" class="cta-button" id="submitBtn" style="width:100%; border:none; cursor:pointer;">
-                    Register Now
+                <div class="form-group">
+                    <label for="notes">Additional Notes (optional)</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Anything we should know?"></textarea>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider"><span>PAYMENT DETAILS</span></div>
+
+                <!-- Payment Instructions -->
+                <div class="payment-box">
+                    <h3><i class="fas fa-money-bill-wave"></i> JazzCash Payment — Rs. 200 (Test Fee)</h3>
+
+                    <p>Please send the test fee via <strong>JazzCash</strong> before submitting the form:</p>
+
+                    <ol>
+                        <li>Open your <strong>JazzCash</strong> app or dial <strong>*786#</strong></li>
+                        <li>Select <strong>Money Transfer → JazzCash Account</strong></li>
+                        <li>Enter the number below and the amount <span class="amount-highlight">Rs. 200</span></li>
+                        <li>Complete the transfer and <strong>note the Transaction ID (TID)</strong></li>
+                        <li>Enter the Transaction ID in the field below</li>
+                    </ol>
+
+                    <p style="margin: 0.4rem 0; font-weight: 600; color: #333;">Send payment to:</p>
+                    <div class="jazz-number">
+                        <i class="fas fa-mobile-alt"></i> 0323-4296569
+                    </div>
+
+                    <p style="margin: 0.4rem 0; font-weight: 600; color: #333;">
+                        Amount: <span class="amount-highlight">Rs. 200 (Test Fee)</span>
+                    </p>
+
+                    <span class="note">
+                        <i class="fas fa-info-circle"></i>
+                        Your application will be approved only after the payment is verified by the admin.
+                    </span>
+                </div>
+
+                <!-- Payment Fields -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="paymentMethod">Payment Method *</label>
+                        <select id="paymentMethod" name="paymentMethod" required>
+                            <option value="JazzCash" selected>JazzCash</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionId">JazzCash Transaction ID (TID) *</label>
+                        <input type="text" id="transactionId" name="transactionId" required placeholder="e.g. 1234567890">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentAmount">Amount Paid (PKR) *</label>
+                    <input type="text" id="paymentAmount" name="paymentAmount" value="200" required readonly
+                           style="background:#f4f4f4; font-weight:700; color:#1a5276;">
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="cta-button" id="submitBtn" style="width:100%; border:none; cursor:pointer; margin-top: 1rem;">
+                    Submit Application
                 </button>
 
                 <div id="formMessage" class="message"></div>
@@ -110,127 +232,65 @@
     </div>
 </section>
 
-<footer>
-    <div class="footer-container">
-        <div class="footer-section">
-            <h3>Contact Information</h3>
-            <div class="contact-info">
-                <p><i class="fas fa-map-marker-alt"></i> <span>Moro Testing Services, Moro, Sindh</span></p>
-                <p><i class="fas fa-envelope"></i> <a href="mailto:morotesting48@gmail.com">morotesting48@gmail.com</a></p>
-                <p><i class="fas fa-phone"></i> <a href="tel:+923234296569">0323-4296569</a></p>
-            </div>
-        </div>
-        <div class="footer-section">
-            <h3>Quick Links</h3>
-            <ul class="footer-links">
-                <li><a href="./index.html">Home</a></li>
-                <li><a href="./register.html">Register</a></li>
-                <li><a href="./login.html">Student Login</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="copyright">
-        <p>&copy; 2026 Moro Testing Services. All rights reserved.</p>
-    </div>
-    <div class="designer-credit">
-        <p>Designed by <strong>Misbah Kazi</strong></p>
-    </div>
-</footer>
-
 <script src="./nav.js"></script>
 
 <script type="module">
-    import {
-        auth, db, createUserWithEmailAndPassword,
-        doc, setDoc, addDoc, collection, serverTimestamp,
-        setMessage, generateSeatNumber
-    } from "./firebase.js";
+    import { db, addDoc, collection, serverTimestamp, setMessage } from "./firebase.js";
 
-    const form = document.getElementById("registrationForm");
-    const btn = document.getElementById("submitBtn");
+    const form = document.getElementById("applicationForm");
+    const btn  = document.getElementById("submitBtn");
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const fullName = document.getElementById("fullName").value.trim();
-        const fatherName = document.getElementById("fatherName").value.trim();
-        const schoolName = document.getElementById("schoolName").value.trim();
-        const email = document.getElementById("email").value.trim().toLowerCase();
-        const phone = document.getElementById("phone").value.trim();
-        const classLevel = document.getElementById("classLevel").value.trim();
-        const city = document.getElementById("city").value.trim();
-        const testProgram = document.getElementById("testProgram").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+        const data = {
+            fullName: document.getElementById("fullName").value.trim(),
+            fatherName: document.getElementById("fatherName").value.trim(),
+            email: document.getElementById("email").value.trim().toLowerCase(),
+            phone: document.getElementById("phone").value.trim(),
+            qualification: document.getElementById("qualification").value.trim(),
+            city: document.getElementById("city").value.trim(),
+            program: document.getElementById("program").value,
+            preferredDate: document.getElementById("preferredDate").value || null,
+            paymentMethod: document.getElementById("paymentMethod").value,
+            transactionId: document.getElementById("transactionId").value.trim(),
+            paymentAmount: document.getElementById("paymentAmount").value.trim(),
+            paymentStatus: "pending-verification",
+            notes: document.getElementById("notes").value.trim(),
+            status: "pending",
+            createdAt: serverTimestamp(),
+            applicationId: "MTS-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000)
+        };
 
-        if (!fullName || !fatherName || !schoolName || !email || !phone || !classLevel || !city || !testProgram) {
+        if (!data.fullName || !data.fatherName || !data.email || !data.phone || !data.qualification || !data.city || !data.program) {
             setMessage("#formMessage", "❌ Please fill all required fields.", "error");
             return;
         }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
             setMessage("#formMessage", "❌ Please enter a valid email address.", "error");
             return;
         }
-        if (password.length < 6) {
-            setMessage("#formMessage", "❌ Password must be at least 6 characters.", "error");
-            return;
-        }
-        if (password !== confirmPassword) {
-            setMessage("#formMessage", "❌ Passwords do not match.", "error");
+        if (!data.transactionId) {
+            setMessage("#formMessage", "❌ Please enter your JazzCash Transaction ID.", "error");
             return;
         }
 
         btn.disabled = true;
         const originalText = btn.textContent;
-        btn.textContent = "Registering...";
+        btn.textContent = "Submitting...";
 
         try {
-            const cred = await createUserWithEmailAndPassword(auth, email, password);
-            const uid = cred.user.uid;
-            const seatNumber = generateSeatNumber();
-
-            const studentData = {
-                uid,
-                fullName,
-                fatherName,
-                schoolName,
-                email,
-                phone,
-                class: classLevel,
-                city,
-                testProgram,
-                seatNumber,
-                status: "pending",
-                createdAt: serverTimestamp()
-            };
-
-            await setDoc(doc(db, "students", uid), studentData);
-            await addDoc(collection(db, "registrations"), {
-                ...studentData,
-                registrationId: "MTS-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000)
-            });
-
+            await addDoc(collection(db, "applications"), data);
             setMessage("#formMessage",
-                "✅ Registration successful! Await admin approval. You can login with your email and password.",
+                "✅ Application submitted successfully! Await admin approval. You will receive credentials by email after payment verification.",
                 "ok");
-
             form.reset();
-
-            setTimeout(() => {
-                window.location.href = "./login.html";
-            }, 2500);
-
+            document.getElementById("paymentAmount").value = "200";
         } catch (err) {
-            console.error("Registration error:", err);
-            let msg = err.message || "Registration failed.";
-            if (err.code === "auth/email-already-in-use") {
-                msg = "This email is already registered. Please login instead.";
-            } else if (err.code === "auth/invalid-email") {
-                msg = "Invalid email address.";
-            } else if (err.code === "auth/weak-password") {
-                msg = "Password is too weak. Use at least 6 characters.";
-            }
-            setMessage("#formMessage", "❌ " + msg, "error");
+            console.error("Firestore error:", err);
+            setMessage("#formMessage",
+                "❌ Error: " + (err.message || "Could not submit. Please try again."),
+                "error");
         } finally {
             btn.disabled = false;
             btn.textContent = originalText;
