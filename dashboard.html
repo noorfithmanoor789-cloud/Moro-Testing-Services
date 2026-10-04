@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles.css">
     <style>
-        /* Exam Slip Styles */
         .slip-container {
             max-width: 720px;
             margin: 2rem auto;
@@ -17,25 +16,14 @@
             overflow: hidden;
             border: 3px solid #1a5276;
         }
-
         .slip-header {
             background: linear-gradient(135deg, #1a5276, #2980b9);
             color: white;
             padding: 1.5rem;
             text-align: center;
         }
-
-        .slip-header h1 {
-            font-size: 1.6rem;
-            margin-bottom: 0.3rem;
-            letter-spacing: 1px;
-        }
-
-        .slip-header p {
-            font-size: 0.95rem;
-            opacity: 0.95;
-        }
-
+        .slip-header h1 { font-size: 1.6rem; margin-bottom: 0.3rem; letter-spacing: 1px; }
+        .slip-header p { font-size: 0.95rem; opacity: 0.95; }
         .slip-title {
             background: #e74c3c;
             color: white;
@@ -45,11 +33,7 @@
             font-size: 1.1rem;
             letter-spacing: 2px;
         }
-
-        .slip-body {
-            padding: 2rem;
-        }
-
+        .slip-body { padding: 2rem; }
         .slip-row {
             display: grid;
             grid-template-columns: 40% 60%;
@@ -57,21 +41,9 @@
             border-bottom: 1px dashed #ddd;
             font-size: 1rem;
         }
-
-        .slip-row:last-child {
-            border-bottom: none;
-        }
-
-        .slip-label {
-            color: #555;
-            font-weight: 600;
-        }
-
-        .slip-value {
-            color: #1a5276;
-            font-weight: 700;
-        }
-
+        .slip-row:last-child { border-bottom: none; }
+        .slip-label { color: #555; font-weight: 600; }
+        .slip-value { color: #1a5276; font-weight: 700; }
         .slip-footer {
             background: #f8f9fa;
             padding: 1rem 2rem;
@@ -82,13 +54,7 @@
             gap: 0.75rem;
             border-top: 2px solid #1a5276;
         }
-
-        .slip-footer p {
-            font-size: 0.85rem;
-            color: #666;
-            margin: 0;
-        }
-
+        .slip-footer p { font-size: 0.85rem; color: #666; margin: 0; }
         .print-btn {
             background: #1a5276;
             color: white;
@@ -97,19 +63,11 @@
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            font-family: inherit;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.3s ease;
         }
-
-        .print-btn:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(41, 128, 185, 0.4);
-        }
-
+        .print-btn:hover { background: #2980b9; transform: translateY(-2px); }
         .pending-box {
             max-width: 600px;
             margin: 3rem auto;
@@ -120,59 +78,20 @@
             text-align: center;
             border-left: 5px solid #f39c12;
         }
-
-        .pending-box i {
-            font-size: 3rem;
-            color: #f39c12;
-            margin-bottom: 1rem;
-        }
-
-        .pending-box h2 {
-            color: #1a5276;
-            margin-bottom: 0.75rem;
-        }
-
-        .pending-box p {
-            color: #666;
-            line-height: 1.7;
-        }
+        .pending-box i { font-size: 3rem; color: #f39c12; margin-bottom: 1rem; }
+        .pending-box h2 { color: #1a5276; margin-bottom: 0.75rem; }
+        .pending-box p { color: #666; line-height: 1.7; }
 
         @media (max-width: 600px) {
-            .slip-row {
-                grid-template-columns: 1fr;
-                gap: 0.2rem;
-                padding: 0.7rem 0;
-            }
-            .slip-label {
-                font-size: 0.85rem;
-            }
-            .slip-value {
-                font-size: 1rem;
-            }
-            .slip-body {
-                padding: 1.25rem;
-            }
-            .slip-header h1 {
-                font-size: 1.2rem;
-            }
-            .slip-footer {
-                justify-content: center;
-                text-align: center;
-                padding: 1rem;
-            }
+            .slip-row { grid-template-columns: 1fr; gap: 0.2rem; padding: 0.7rem 0; }
+            .slip-body { padding: 1.25rem; }
+            .slip-header h1 { font-size: 1.2rem; }
+            .slip-footer { justify-content: center; text-align: center; }
         }
-
         @media print {
             body * { visibility: hidden; }
             .slip-container, .slip-container * { visibility: visible; }
-            .slip-container {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                box-shadow: none;
-                margin: 0;
-            }
+            .slip-container { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; margin: 0; }
             .print-btn, .no-print { display: none !important; }
         }
     </style>
@@ -202,7 +121,6 @@
 <section>
     <div class="section-container">
 
-        <!-- PENDING APPROVAL -->
         <div id="pendingBox" class="pending-box" style="display:none;">
             <i class="fas fa-hourglass-half"></i>
             <h2>Registration Pending Approval</h2>
@@ -212,60 +130,47 @@
             </p>
         </div>
 
-        <!-- EXAM SLIP (only visible after approval) -->
         <div id="slipBox" style="display:none;">
             <div class="slip-container">
                 <div class="slip-header">
                     <h1>MORO TESTING SERVICES</h1>
                     <p>Official Examination Slip</p>
                 </div>
-
-                <div class="slip-title">
-                    EXAMINATION SLIP
-                </div>
-
+                <div class="slip-title">EXAMINATION SLIP</div>
                 <div class="slip-body">
                     <div class="slip-row">
                         <span class="slip-label">Student Name:</span>
                         <span class="slip-value" id="slipName">—</span>
                     </div>
-
                     <div class="slip-row">
                         <span class="slip-label">Father Name:</span>
                         <span class="slip-value" id="slipFather">—</span>
                     </div>
-
                     <div class="slip-row">
                         <span class="slip-label">School Name:</span>
                         <span class="slip-value" id="slipSchool">—</span>
                     </div>
-
                     <div class="slip-row">
                         <span class="slip-label">Class:</span>
                         <span class="slip-value" id="slipClass">—</span>
                     </div>
-
                     <div class="slip-row">
                         <span class="slip-label">Test Program:</span>
                         <span class="slip-value" id="slipProgram">—</span>
                     </div>
-
                     <div class="slip-row">
                         <span class="slip-label">Seat Number:</span>
                         <span class="slip-value" id="slipSeat">—</span>
                     </div>
-
                     <div class="slip-row">
                         <span class="slip-label">Email:</span>
                         <span class="slip-value" id="slipEmail">—</span>
                     </div>
-
                     <div class="slip-row">
                         <span class="slip-label">Phone:</span>
                         <span class="slip-value" id="slipPhone">—</span>
                     </div>
                 </div>
-
                 <div class="slip-footer">
                     <p><i class="fas fa-info-circle"></i> Keep this slip safe. Bring it to the exam hall.</p>
                     <button class="print-btn" onclick="window.print()">
@@ -322,19 +227,17 @@
         try {
             const snap = await getDoc(doc(db, "students", user.uid));
             if (!snap.exists()) {
-                alert("Student record not found. Contact admin.");
+                alert("Student record not found.");
                 await signOut(auth);
                 window.location.href = "./login.html";
                 return;
             }
 
             const s = snap.data();
-
             document.getElementById("studentName").textContent = s.fullName || "Student";
             document.getElementById("studentSeat").textContent = s.seatNumber || "—";
 
             if (s.status === "approved") {
-                // Show exam slip
                 document.getElementById("slipBox").style.display = "block";
                 document.getElementById("pendingBox").style.display = "none";
 
@@ -347,11 +250,9 @@
                 document.getElementById("slipEmail").textContent = s.email || "—";
                 document.getElementById("slipPhone").textContent = s.phone || "—";
             } else {
-                // Show pending message
                 document.getElementById("pendingBox").style.display = "block";
                 document.getElementById("slipBox").style.display = "none";
             }
-
         } catch (err) {
             console.error(err);
         }
