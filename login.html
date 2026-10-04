@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./styles.css">
     <style>
+        /* Emergency fallback — guarantees page is visible even if styles.css fails */
         .form-container, .fade-in, .zoom-in { opacity: 1 !important; transform: none !important; }
     </style>
 </head>
@@ -17,7 +18,7 @@
             <img src="./logo.jpg" alt="Moro Testing Services" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">
                 <h1>MORO TESTING SERVICES</h1>
-                <p>Student Login</p>
+                <p>Excellence in Testing & Student Assessment</p>
             </div>
         </div>
     </div>
@@ -30,20 +31,20 @@
         <div class="section-title">
             <h2>Student Login</h2>
             <p style="color: #555; font-size: 1.1rem; margin-top: 1rem;">
-                Login with the email and password you used during registration.
+                Enter the credentials sent to your email after approval.
             </p>
         </div>
 
         <div class="form-container" style="max-width: 480px;">
             <form id="loginForm" novalidate>
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" required placeholder="you@example.com" autocomplete="email">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="e.g. MTS-2026-1842" autocomplete="username">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" required placeholder="Enter your password" autocomplete="current-password">
+                    <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password">
                 </div>
 
                 <button type="submit" class="cta-button" id="loginBtn" style="width:100%; border:none; cursor:pointer;">
@@ -53,50 +54,23 @@
                 <div id="loginMessage" class="message"></div>
 
                 <p style="text-align: center; margin-top: 1.5rem; color: #666;">
-                    New student?
-                    <a href="./register.html" style="color: #1a5276; font-weight: 600;">Register Now</a>
+                    New applicant?
+                    <a href="./register.html" style="color: #1a5276; font-weight: 600;">Apply Now</a>
                 </p>
                 <p style="text-align: center; margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
-                    Forgot password? Contact admin at <strong>0323-4296569</strong>
+                    Forgot password? Contact admin at <strong>03234296569</strong>
                 </p>
             </form>
         </div>
     </div>
 </section>
 
-<footer>
-    <div class="footer-container">
-        <div class="footer-section">
-            <h3>Contact Information</h3>
-            <div class="contact-info">
-                <p><i class="fas fa-map-marker-alt"></i> <span>Moro Testing Services, Moro, Sindh</span></p>
-                <p><i class="fas fa-envelope"></i> <a href="mailto:morotesting48@gmail.com">morotesting48@gmail.com</a></p>
-                <p><i class="fas fa-phone"></i> <a href="tel:+923234296569">0323-4296569</a></p>
-            </div>
-        </div>
-        <div class="footer-section">
-            <h3>Quick Links</h3>
-            <ul class="footer-links">
-                <li><a href="./index.html">Home</a></li>
-                <li><a href="./register.html">Register</a></li>
-                <li><a href="./login.html">Student Login</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="copyright">
-        <p>&copy; 2026 Moro Testing Services. All rights reserved.</p>
-    </div>
-    <div class="designer-credit">
-        <p>Designed by <strong>Misbah Kazi</strong></p>
-    </div>
-</footer>
-
 <script src="./nav.js"></script>
 
 <script type="module">
     import {
-        auth, db, signInWithEmailAndPassword,
-        doc, getDoc, signOut
+        auth, db, signInWithEmailAndPassword, usernameToEmail,
+        doc, getDoc
     } from "./firebase.js";
 
     function showMessage(target, text, type = "ok") {
@@ -107,16 +81,16 @@
     }
 
     const form = document.getElementById("loginForm");
-    const btn = document.getElementById("loginBtn");
+    const btn  = document.getElementById("loginBtn");
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const email = document.getElementById("email").value.trim().toLowerCase();
+        const username = document.getElementById("username").value.trim();
         const password = document.getElementById("password").value;
 
-        if (!email || !password) {
-            showMessage("#loginMessage", "❌ Please enter both email and password.", "error");
+        if (!username || !password) {
+            showMessage("#loginMessage", "❌ Please enter both username and password.", "error");
             return;
         }
 
@@ -126,41 +100,41 @@
         showMessage("#loginMessage", "", "");
 
         try {
+            const email = username.includes("@") ? username : usernameToEmail(username);
+
             const cred = await signInWithEmailAndPassword(auth, email, password);
+
             const snap = await getDoc(doc(db, "students", cred.user.uid));
-
             if (!snap.exists()) {
-                throw new Error("Student record not found. Contact admin.");
+                throw new Error("Student record not found. Contact admin at 03234296569.");
             }
 
-            const student = snap.data();
-
-            if (student.status !== "approved") {
-                showMessage("#loginMessage", "⏳ Your registration is pending admin approval. Please wait.", "error");
-                await signOut(auth);
-                return;
-            }
-
-            localStorage.setItem("mts_student", JSON.stringify(student));
+            localStorage.setItem("mts_student", JSON.stringify(snap.data()));
             showMessage("#loginMessage", "✅ Login successful! Redirecting...", "ok");
 
             setTimeout(() => {
                 window.location.href = "./dashboard.html";
-            }, 900);
+            }, 700);
 
         } catch (err) {
             console.error("Login error:", err);
-            let msg = err.message || "Login failed.";
+
+            let msg = err.message || "Login failed. Please try again.";
             if (
                 err.code === "auth/invalid-credential" ||
                 err.code === "auth/wrong-password" ||
                 err.code === "auth/user-not-found" ||
                 err.code === "auth/invalid-email"
             ) {
-                msg = "Invalid email or password.";
+                msg = "Invalid username or password.";
             } else if (err.code === "auth/too-many-requests") {
-                msg = "Too many failed attempts. Please wait a few minutes.";
+                msg = "Too many failed attempts. Please wait a few minutes and try again.";
+            } else if (err.code === "auth/network-request-failed") {
+                msg = "Network error. Please check your internet connection.";
+            } else if (err.code === "auth/operation-not-allowed") {
+                msg = "Login is disabled. Please contact admin.";
             }
+
             showMessage("#loginMessage", "❌ " + msg, "error");
         } finally {
             btn.disabled = false;
