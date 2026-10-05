@@ -20,7 +20,6 @@
             border: 2px solid #1a5276;
         }
 
-        /* HEADER with logo */
         .slip-header {
             background: linear-gradient(135deg, #1a5276 0%, #2980b9 100%);
             color: white;
@@ -58,7 +57,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* SLIP TITLE BAR */
         .slip-title-bar {
             background: #1a5276;
             color: white;
@@ -70,7 +68,6 @@
             text-transform: uppercase;
         }
 
-        /* BODY */
         .slip-body {
             padding: 2rem 2rem 1.5rem;
         }
@@ -95,7 +92,6 @@
             font-size: 1.02rem;
         }
 
-        /* SEAT NUMBER HIGHLIGHT */
         .slip-row.highlight {
             background: #eef4fa;
             padding: 0.9rem 1rem;
@@ -114,7 +110,6 @@
             letter-spacing: 1px;
         }
 
-        /* FOOTER */
         .slip-footer {
             background: #f8f9fa;
             padding: 1.1rem 2rem;
@@ -157,7 +152,6 @@
             box-shadow: 0 8px 20px rgba(41, 128, 185, 0.4);
         }
 
-        /* PENDING APPROVAL */
         .pending-box {
             max-width: 600px;
             margin: 3rem auto;
@@ -196,7 +190,6 @@
             font-size: 0.95rem;
         }
 
-        /* INSTRUCTIONS */
         .instructions-box {
             max-width: 700px;
             margin: 1.5rem auto 3rem;
@@ -227,20 +220,127 @@
             margin-bottom: 0.35rem;
         }
 
-        /* PRINT */
+        /* ============================================================
+           PRINT STYLES — SINGLE PAGE, NO SPLIT
+           ============================================================ */
         @media print {
-            body * { visibility: hidden; }
-            .slip-container, .slip-container * { visibility: visible; }
+            /* Hide everything by default */
+            body * {
+                visibility: hidden;
+            }
+
+            /* Show only the slip */
+            .slip-container,
+            .slip-container * {
+                visibility: visible;
+            }
+
+            /* Hide non-print elements */
+            .print-btn,
+            .no-print,
+            header,
+            nav,
+            footer,
+            .section-title {
+                display: none !important;
+            }
+
+            /* Position slip at top-left */
             .slip-container {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
-                box-shadow: none;
-                margin: 0;
+                max-width: 100%;
+                margin: 0 !important;
+                padding: 0;
+                box-shadow: none !important;
                 border: 2px solid #1a5276;
+                border-radius: 0;
+                page-break-inside: avoid;
+                page-break-after: avoid;
             }
-            .print-btn, .no-print { display: none !important; }
+
+            /* Compact header */
+            .slip-header {
+                padding: 0.8rem 1rem !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .slip-logo {
+                width: 55px !important;
+                height: 55px !important;
+                border-width: 2px !important;
+            }
+
+            .slip-header-text h1 {
+                font-size: 1.15rem !important;
+                margin-bottom: 0.1rem !important;
+            }
+
+            .slip-header-text p {
+                font-size: 0.78rem !important;
+            }
+
+            /* Compact title bar */
+            .slip-title-bar {
+                padding: 0.4rem !important;
+                font-size: 0.85rem !important;
+                letter-spacing: 2px !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* Compact body */
+            .slip-body {
+                padding: 0.9rem 1.2rem !important;
+            }
+
+            .slip-row {
+                padding: 0.4rem 0 !important;
+                font-size: 0.85rem !important;
+            }
+
+            .slip-row.highlight {
+                padding: 0.5rem 0.75rem !important;
+                margin: 0.25rem -0.5rem !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .slip-label {
+                font-size: 0.82rem !important;
+            }
+
+            .slip-value {
+                font-size: 0.88rem !important;
+            }
+
+            .slip-row.highlight .slip-value {
+                font-size: 0.95rem !important;
+            }
+
+            /* Compact footer */
+            .slip-footer {
+                padding: 0.6rem 1.2rem !important;
+            }
+
+            .slip-footer p {
+                font-size: 0.78rem !important;
+            }
+
+            /* Page setup */
+            @page {
+                size: A4 portrait;
+                margin: 8mm;
+            }
+
+            /* Prevent page breaks */
+            html, body {
+                height: auto !important;
+                overflow: visible !important;
+            }
         }
 
         /* MOBILE */
@@ -320,7 +420,6 @@
             </div>
 
             <div class="slip-container">
-                <!-- HEADER WITH LOGO (NO PHONE) -->
                 <div class="slip-header">
                     <img src="./logo.jpg" alt="MTS Logo" class="slip-logo" onerror="this.style.display='none'">
                     <div class="slip-header-text">
@@ -329,12 +428,10 @@
                     </div>
                 </div>
 
-                <!-- TITLE BAR -->
                 <div class="slip-title-bar">
                     EXAMINATION SLIP
                 </div>
 
-                <!-- BODY -->
                 <div class="slip-body">
                     <div class="slip-row">
                         <span class="slip-label">Student Name</span>
@@ -377,7 +474,6 @@
                     </div>
                 </div>
 
-                <!-- FOOTER -->
                 <div class="slip-footer">
                     <p><i class="fas fa-info-circle"></i> Keep this slip safe. Bring it to the exam hall.</p>
                     <button class="print-btn" onclick="window.print()">
@@ -386,7 +482,6 @@
                 </div>
             </div>
 
-            <!-- INSTRUCTIONS -->
             <div class="instructions-box no-print">
                 <h3><i class="fas fa-exclamation-triangle"></i> Important Instructions</h3>
                 <ul>
@@ -404,7 +499,6 @@
     </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
     <div class="footer-container">
         <div class="footer-section">
