@@ -8,75 +8,116 @@
     <link rel="stylesheet" href="./styles.css">
     <style>
         /* ============================================================
-           EXAM SLIP STYLES
+           PROFESSIONAL EXAM SLIP
            ============================================================ */
         .slip-container {
-            max-width: 720px;
+            max-width: 700px;
             margin: 2rem auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
             overflow: hidden;
-            border: 3px solid #1a5276;
+            border: 2px solid #1a5276;
         }
 
+        /* HEADER with logo */
         .slip-header {
-            background: linear-gradient(135deg, #1a5276, #2980b9);
+            background: linear-gradient(135deg, #1a5276 0%, #2980b9 100%);
             color: white;
-            padding: 1.5rem;
-            text-align: center;
+            padding: 1.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
         }
 
-        .slip-header h1 {
-            font-size: 1.7rem;
-            margin-bottom: 0.3rem;
-            letter-spacing: 1px;
+        .slip-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            background: white;
+            flex-shrink: 0;
         }
 
-        .slip-header p {
-            font-size: 0.95rem;
-            opacity: 0.95;
+        .slip-header-text {
+            text-align: left;
+            flex: 1;
         }
 
-        .slip-title {
-            background: #e74c3c;
-            color: white;
-            text-align: center;
-            padding: 0.8rem;
+        .slip-header-text h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            letter-spacing: 1.5px;
             font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 3px;
         }
 
+        .slip-header-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+
+        /* SLIP TITLE BAR */
+        .slip-title-bar {
+            background: #1a5276;
+            color: white;
+            text-align: center;
+            padding: 0.65rem;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* BODY */
         .slip-body {
-            padding: 2rem;
+            padding: 2rem 2rem 1.5rem;
         }
 
         .slip-row {
             display: grid;
-            grid-template-columns: 40% 60%;
-            padding: 0.9rem 0;
-            border-bottom: 1px dashed #ddd;
-            font-size: 1.05rem;
-        }
-
-        .slip-row:last-child {
-            border-bottom: none;
+            grid-template-columns: 42% 58%;
+            padding: 0.75rem 0;
+            font-size: 1rem;
+            align-items: center;
         }
 
         .slip-label {
             color: #555;
             font-weight: 600;
+            font-size: 0.95rem;
         }
 
         .slip-value {
             color: #1a5276;
             font-weight: 700;
+            font-size: 1.02rem;
         }
 
+        /* SEAT NUMBER HIGHLIGHT */
+        .slip-row.highlight {
+            background: #eef4fa;
+            padding: 0.9rem 1rem;
+            border-radius: 8px;
+            margin: 0.5rem -1rem;
+            border: 1px solid #d0e1f0;
+        }
+
+        .slip-row.highlight .slip-label {
+            color: #1a5276;
+        }
+
+        .slip-row.highlight .slip-value {
+            color: #c0392b;
+            font-size: 1.15rem;
+            letter-spacing: 1px;
+        }
+
+        /* FOOTER */
         .slip-footer {
             background: #f8f9fa;
-            padding: 1.2rem 2rem;
+            padding: 1.1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -86,20 +127,19 @@
         }
 
         .slip-footer p {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: #666;
             margin: 0;
-        }
-
-        .slip-footer p strong {
-            color: #c0392b;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
         .print-btn {
             background: #1a5276;
             color: white;
             border: none;
-            padding: 0.7rem 1.4rem;
+            padding: 0.65rem 1.4rem;
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
@@ -107,7 +147,7 @@
             align-items: center;
             gap: 0.5rem;
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             transition: all 0.3s ease;
         }
 
@@ -117,7 +157,7 @@
             box-shadow: 0 8px 20px rgba(41, 128, 185, 0.4);
         }
 
-        /* PENDING APPROVAL BOX */
+        /* PENDING APPROVAL */
         .pending-box {
             max-width: 600px;
             margin: 3rem auto;
@@ -156,20 +196,20 @@
             font-size: 0.95rem;
         }
 
-        /* INSTRUCTIONS BOX */
+        /* INSTRUCTIONS */
         .instructions-box {
-            max-width: 720px;
+            max-width: 700px;
             margin: 1.5rem auto 3rem;
-            background: linear-gradient(135deg, #fff5e6 0%, #ffe9d1 100%);
-            border-left: 5px solid #e74c3c;
+            background: #f8f9fa;
+            border-left: 5px solid #1a5276;
             border-radius: 12px;
             padding: 1.5rem;
             text-align: left;
         }
 
         .instructions-box h3 {
-            color: #c0392b;
-            margin-bottom: 0.8rem;
+            color: #1a5276;
+            margin-bottom: 0.9rem;
             font-size: 1.15rem;
             display: flex;
             align-items: center;
@@ -177,24 +217,20 @@
         }
 
         .instructions-box ul {
-            margin: 0.5rem 0 0 1.2rem;
+            margin: 0 0 0 1.2rem;
             color: #333;
-            font-size: 0.98rem;
-            line-height: 1.8;
+            font-size: 0.95rem;
+            line-height: 1.85;
         }
 
         .instructions-box li {
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.35rem;
         }
 
-        /* PRINT STYLES */
+        /* PRINT */
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            .slip-container, .slip-container * {
-                visibility: visible;
-            }
+            body * { visibility: hidden; }
+            .slip-container, .slip-container * { visibility: visible; }
             .slip-container {
                 position: absolute;
                 left: 0;
@@ -202,44 +238,41 @@
                 width: 100%;
                 box-shadow: none;
                 margin: 0;
-                border: 3px solid #1a5276;
+                border: 2px solid #1a5276;
             }
-            .print-btn, .no-print {
-                display: none !important;
-            }
+            .print-btn, .no-print { display: none !important; }
         }
 
         /* MOBILE */
         @media (max-width: 600px) {
+            .slip-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem 1rem;
+            }
+            .slip-header-text { text-align: center; }
+            .slip-header-text h1 { font-size: 1.15rem; }
+            .slip-logo { width: 70px; height: 70px; }
+            .slip-title-bar { font-size: 0.9rem; letter-spacing: 2px; }
             .slip-row {
                 grid-template-columns: 1fr;
                 gap: 0.2rem;
-                padding: 0.7rem 0;
+                padding: 0.65rem 0;
             }
-            .slip-label {
-                font-size: 0.88rem;
+            .slip-row.highlight {
+                margin: 0.4rem -0.75rem;
+                padding: 0.75rem 0.75rem;
             }
-            .slip-value {
-                font-size: 1rem;
-            }
-            .slip-body {
-                padding: 1.25rem;
-            }
-            .slip-header h1 {
-                font-size: 1.25rem;
-            }
-            .slip-title {
-                font-size: 1rem;
-                letter-spacing: 2px;
-            }
+            .slip-label { font-size: 0.85rem; }
+            .slip-value { font-size: 0.98rem; }
+            .slip-row.highlight .slip-value { font-size: 1.05rem; }
+            .slip-body { padding: 1.5rem 1.25rem 1rem; }
             .slip-footer {
                 justify-content: center;
                 text-align: center;
                 padding: 1rem;
             }
-            .instructions-box {
-                margin: 1rem;
-            }
+            .instructions-box { margin: 1rem; }
         }
     </style>
 </head>
@@ -268,7 +301,7 @@
 <section>
     <div class="section-container">
 
-        <!-- PENDING APPROVAL MESSAGE -->
+        <!-- PENDING APPROVAL -->
         <div id="pendingBox" class="pending-box" style="display:none;">
             <i class="fas fa-hourglass-half"></i>
             <h2>Registration Pending Approval</h2>
@@ -287,57 +320,64 @@
             </div>
 
             <div class="slip-container">
+                <!-- HEADER WITH LOGO (NO PHONE) -->
                 <div class="slip-header">
-                    <h1>MORO TESTING SERVICES</h1>
-                    <p>Official Examination Slip</p>
+                    <img src="./logo.jpg" alt="MTS Logo" class="slip-logo" onerror="this.style.display='none'">
+                    <div class="slip-header-text">
+                        <h1>MORO TESTING SERVICES</h1>
+                        <p>Moro, Sindh</p>
+                    </div>
                 </div>
 
-                <div class="slip-title">
+                <!-- TITLE BAR -->
+                <div class="slip-title-bar">
                     EXAMINATION SLIP
                 </div>
 
+                <!-- BODY -->
                 <div class="slip-body">
                     <div class="slip-row">
-                        <span class="slip-label">Student Name:</span>
+                        <span class="slip-label">Student Name</span>
                         <span class="slip-value" id="slipName">—</span>
                     </div>
 
                     <div class="slip-row">
-                        <span class="slip-label">Father Name:</span>
+                        <span class="slip-label">Father Name</span>
                         <span class="slip-value" id="slipFather">—</span>
                     </div>
 
                     <div class="slip-row">
-                        <span class="slip-label">School Name:</span>
+                        <span class="slip-label">School Name</span>
                         <span class="slip-value" id="slipSchool">—</span>
                     </div>
 
                     <div class="slip-row">
-                        <span class="slip-label">Class / Qualification:</span>
+                        <span class="slip-label">Class / Qualification</span>
                         <span class="slip-value" id="slipClass">—</span>
                     </div>
 
                     <div class="slip-row">
-                        <span class="slip-label">Test Program:</span>
+                        <span class="slip-label">Test Program</span>
                         <span class="slip-value" id="slipProgram">—</span>
                     </div>
 
-                    <div class="slip-row">
-                        <span class="slip-label">Seat Number:</span>
+                    <div class="slip-row highlight">
+                        <span class="slip-label">Seat Number</span>
                         <span class="slip-value" id="slipSeat">—</span>
                     </div>
 
                     <div class="slip-row">
-                        <span class="slip-label">Email:</span>
+                        <span class="slip-label">Email</span>
                         <span class="slip-value" id="slipEmail">—</span>
                     </div>
 
                     <div class="slip-row">
-                        <span class="slip-label">Phone:</span>
+                        <span class="slip-label">Phone</span>
                         <span class="slip-value" id="slipPhone">—</span>
                     </div>
                 </div>
 
+                <!-- FOOTER -->
                 <div class="slip-footer">
                     <p><i class="fas fa-info-circle"></i> Keep this slip safe. Bring it to the exam hall.</p>
                     <button class="print-btn" onclick="window.print()">
@@ -432,7 +472,6 @@
             document.getElementById("studentSeat").textContent = s.seatNumber || "—";
 
             if (s.status === "approved") {
-                // Show exam slip
                 document.getElementById("slipBox").style.display = "block";
                 document.getElementById("pendingBox").style.display = "none";
 
@@ -445,7 +484,6 @@
                 document.getElementById("slipEmail").textContent = s.email || s.contactEmail || "—";
                 document.getElementById("slipPhone").textContent = s.phone || "—";
             } else {
-                // Show pending message
                 document.getElementById("pendingBox").style.display = "block";
                 document.getElementById("slipBox").style.display = "none";
             }
